@@ -5,6 +5,11 @@ This repository contains the **Multi-Scale Adversarial Training (MSAT)** framewo
 
 MSAT integrates a SinGAN-based generator for creating high-fidelity augmentations, a Realism Discriminator for assessing data quality, and a Multi-Scale Attention (MSA) module to improve feature relevance during detection.
 
+![hybrid](https://github.com/user-attachments/assets/f8784eda-2e4c-4a2b-99ad-3b2e7cae9fff)
+![flowdiagram_complete](https://github.com/user-attachments/assets/fd1fcbe4-37b6-4760-9f8d-b32f41d542b4)
+
+
+
 
 ### ✨ Features
 
