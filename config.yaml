@@ -1,0 +1,6 @@
+# SinGAN config
+image_size: 256
+num_scales: 8
+num_samples: 5
+save_dir: "./outputs/generated_samples"
+

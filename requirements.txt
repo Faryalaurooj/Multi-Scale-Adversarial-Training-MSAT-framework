@@ -1,0 +1,12 @@
+torch>=1.10.0            # PyTorch for deep learning models
+torchvision>=0.11.0      # For computer vision tasks (e.g., object detection)
+numpy>=1.21.0            # For numerical computations
+scipy>=1.7.0             # For scientific computations
+PyYAML>=5.4.0            # For reading and writing YAML configuration files
+Pillow>=8.0.0            # For image processing tasks
+opencv-python>=4.5.0     # For image/video handling (optional if needed)
+matplotlib>=3.4.0        # For visualization
+tqdm>=4.62.0             # For progress bars during training
+scikit-learn>=0.24.0     # For machine learning utilities (e.g., evaluation metrics)
+pytorch-lightning>=1.4.0 # For simplifying PyTorch model training
+
