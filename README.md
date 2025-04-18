@@ -21,66 +21,99 @@ MSAT integrates a SinGAN-based generator for creating high-fidelity augmentation
 
 
 
-### 📁 Directory Structure
+Here's how you can use your MSAT framework code step-by-step. These are command-line instructions for **training, generating synthetic data, evaluating**, and automating the adaptive pipeline.
 
+---
+
+### 🛠️ 1. **Install Requirements**
+Install dependencies (create a virtual environment if needed):
+
+```bash
+pip install -r requirements.txt
 ```
-MSAT-Framework/
-├── main.py                  # Entry point for training and evaluation
-├── train_gan.py             # Script to train SinGAN on real samples
-├── dataset.py               # Dataset loader and pre-processing
-├── config.yaml              # Configurations for model and training
-├── README.md                # Project overview and instructions
-├── utils/
-│   └── singan_wrapper.py    # Wrapper for SinGAN integration
-├── models/
-│   ├── discriminator.py     # Realism Discriminator definition
-│   └── msa_module.py        # Multi-Scale Attention module
+
+Make sure `PyTorch`, `OpenCV`, and compatible `CUDA` versions are installed.
+
+---
+
+### 📁 2. **Folder Structure Overview**
+```
+MSAT_Framework/
+├── train.py              # For training the detection model
+├── generate.py           # For generating synthetic images with SinGAN
+├── evaluate_image.py     # For evaluating and adapting harmonization
+├── configs/
+│   ├── yolov10.yaml      # YOLOv10 training config
+│   └── singan.yaml       # SinGAN generation config
+├── weights/              # Store trained weights
 ├── data/
-│   ├── real/                # Folder for real imagery
-│   └── synthetic/           # Folder for SinGAN-generated samples
-├── outputs/
-│   └── generated_samples/   # Output directory for synthetic data
+│   ├── real/             # Real training images
+│   ├── hybrid/           # Folder for synthetic data
+│   └── annotations/      # Corresponding label files
+├── models/               # Detection and generation models
+└── utils/                # Helper functions
 ```
 
 ---
 
-### ⚙️ Installation
+### 🚀 3. **Train Detection Model**
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/MSAT-Framework.git
-   cd MSAT-Framework
-   ```
+You can train on real or hybrid data:
 
-2. Install dependencies (Python 3.8+ recommended):
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. (Optional) Set up a virtual environment:
-   ```bash
-   python -m venv msat_env
-   source msat_env/bin/activate
-   ```
-
-
-
-### 🚀 Commands
-
-#### Train SinGAN on Real Imagery
 ```bash
-python train_gan.py --input_dir ./data/real --output_dir ./data/synthetic
+python train.py \
+  --config configs/yolov10.yaml \
+  --data data/real \
+  --weights weights/yolov10.pt \
+  --epochs 100 \
+  --batch-size 16
 ```
 
-#### Train MSAT Detection Pipeline
+---
+
+### 🧠 4. **Generate Synthetic Data using SinGAN**
+
+This will generate and harmonize synthetic aircraft images and place them into `data/hybrid`.
+
 ```bash
-python main.py --config config.yaml
+python generate.py \
+  --config configs/singan.yaml \
+  --output_dir data/hybrid \
+  --num_samples 100 \
+  --harmonization-scale 1.0
 ```
 
-#### Evaluate on Real/Test Dataset
+---
+
+### ✅ 5. **Evaluate with Real-Trained Model and Adapt Harmonization**
+
+Evaluates whether the model trained on real data detects objects in synthetic images. If not, it adjusts harmonization scale and retries.
+
 ```bash
-python main.py --config config.yaml --mode eval
+python evaluate_image.py \
+  --model weights/yolov10.pt \
+  --synthetic_dir data/hybrid \
+  --real_data_dir data/real \
+  --harmonization_step 0.1 \
+  --max_attempts 5
 ```
+
+---
+
+### 🔁 6. **Fully Automated Pipeline**
+
+To combine generation, training, and evaluation in a loop, create a shell or Python script that calls:
+```bash
+generate.py → train.py → evaluate_image.py → repeat if needed
+```
+
+Let me know if you want me to prepare that automation script too.
+
+---
+
+Would you like:
+- A `run_pipeline.sh` or `pipeline.py` file to do this loop for you?
+- GitHub `README.md` file to help you document it?
 
 
 
@@ -101,7 +134,7 @@ MSAT has been evaluated on several aerial datasets. It demonstrates improved F1-
 
 | Model     | Dataset       | F1-Score | Precision | Recall |
 |-----------|---------------|----------|-----------|--------|
-| YOLOv8    | DOTA         | 0.72     | 0.70      | 0.74   |
+| YOLOv10    | DOTA         | 0.72     | 0.70      | 0.74   |
 | **MSAT**  | DOTA       | **0.82** | **0.80**  | **0.85** |
 | MSAT + MSA | Custom Hybrid | **0.87** | **0.86**  | **0.89** |
 
