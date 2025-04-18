@@ -101,8 +101,8 @@ MSAT has been evaluated on several aerial datasets. It demonstrates improved F1-
 
 | Model     | Dataset       | F1-Score | Precision | Recall |
 |-----------|---------------|----------|-----------|--------|
-| YOLOv8    | xView         | 0.72     | 0.70      | 0.74   |
-| **MSAT**  | xView         | **0.82** | **0.80**  | **0.85** |
+| YOLOv8    | DOTA         | 0.72     | 0.70      | 0.74   |
+| **MSAT**  | DOTA       | **0.82** | **0.80**  | **0.85** |
 | MSAT + MSA | Custom Hybrid | **0.87** | **0.86**  | **0.89** |
 
 
