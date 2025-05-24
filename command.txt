@@ -1,0 +1,2 @@
+python inference.py --image path/to/test.jpg --weights checkpoints/yolo_epoch50.pth --output result.jpg
+
