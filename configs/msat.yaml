@@ -1,0 +1,131 @@
+# =========================================================
+# MSAT Framework Configuration
+# Multi-Scale Adversarial Training for Remote Sensing
+# =========================================================
+
+project:
+  name: MSAT
+  version: 1.0
+  seed: 42
+  device: cuda
+
+# ---------------------------------------------------------
+# Dataset Configuration
+# ---------------------------------------------------------
+data:
+  dataset: dota   # options: dota | nwpu | aid | patternnet
+
+  train_img_dir: datasets/dota/images/train
+  train_label_dir: datasets/dota/labels/train
+
+  val_img_dir: datasets/dota/images/val
+  val_label_dir: datasets/dota/labels/val
+
+  img_size: 1024
+  batch_size: 8
+  num_workers: 4
+  pin_memory: true
+
+  augmentation:
+    horizontal_flip: true
+    vertical_flip: true
+    rotation: 30
+    color_jitter: true
+
+# ---------------------------------------------------------
+# Model Configuration
+# ---------------------------------------------------------
+model:
+  name: MSATDetector
+
+  backbone:
+    type: MSAT
+    in_channels: 3
+    base_channels: 64
+    num_blocks: 4
+
+  attention:
+    type: CBAM
+    reduction: 16
+
+  detector:
+    num_classes: 18   # DOTA-v2 default
+    anchors: [10, 13, 16, 30, 33, 23]
+
+# ---------------------------------------------------------
+# SinGAN Augmentation (MSA module)
+# ---------------------------------------------------------
+singan:
+  enabled: true
+  channels: 64
+  num_layers: 5
+  scale_factors: [0.75, 0.5, 0.25]
+
+# ---------------------------------------------------------
+# Discriminator (Adversarial Training)
+# ---------------------------------------------------------
+discriminator:
+  enabled: true
+  base_channels: 64
+
+# ---------------------------------------------------------
+# Training Configuration
+# ---------------------------------------------------------
+train:
+  epochs: 100
+  lr: 0.0001
+  weight_decay: 0.0005
+
+  optimizer: adamw
+  betas: [0.9, 0.999]
+
+  scheduler:
+    type: cosine
+    warmup_epochs: 5
+
+  grad_clip: 5.0
+
+  mixed_precision: true
+
+# ---------------------------------------------------------
+# Loss Weights
+# ---------------------------------------------------------
+loss:
+  cls_weight: 1.0
+  box_weight: 5.0
+  obj_weight: 1.0
+
+  adversarial_weight: 0.2
+  perceptual_weight: 0.1
+
+# ---------------------------------------------------------
+# Evaluation
+# ---------------------------------------------------------
+eval:
+  iou_threshold: 0.5
+  conf_threshold: 0.25
+  nms_threshold: 0.45
+
+  metrics:
+    - mAP
+    - precision
+    - recall
+    - fid
+    - lpips
+
+# ---------------------------------------------------------
+# Logging
+# ---------------------------------------------------------
+logging:
+  use_wandb: false
+  log_interval: 50
+  save_dir: outputs/msat_runs
+  checkpoint_interval: 5
+
+# ---------------------------------------------------------
+# Inference
+# ---------------------------------------------------------
+inference:
+  weight_path: outputs/msat_runs/best.pt
+  save_visuals: true
+  output_dir: outputs/inference
