@@ -54,8 +54,17 @@ MSAT integrates:
 
 ## ⚙️ Installation
 
+✔ If using GPU (recommended)
+
+Install PyTorch separately based on CUDA:
+
+Example (CUDA 11.8):
 ```bash
-  pip install -r requirements.txt
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+Then install rest:
+```bash
+pip install -r requirements.txt
 ```
 
 Recommended:
@@ -146,3 +155,5 @@ Better GAN training strategies
 This framework is research-oriented
 Ensure GPU availability for SinGAN generation
 For best results, use hybrid training (real + synthetic)
+
+
